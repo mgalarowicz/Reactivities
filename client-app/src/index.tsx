@@ -8,6 +8,10 @@ import App from "./app/layout/App";
 import * as serviceWorker from "./serviceWorker";
 import "semantic-ui-css/semantic.min.css";
 import ScrollToTop from "./app/layout/ScrollToTop";
+import 'react-widgets/dist/css/react-widgets.css';
+import dateFnsLocalizer from "react-widgets-date-fns";
+
+dateFnsLocalizer();
 
 export const history = createBrowserHistory();
 
