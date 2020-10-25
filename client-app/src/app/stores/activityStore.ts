@@ -7,6 +7,8 @@ import {
   runInAction,
 } from "mobx";
 import { createContext, SyntheticEvent } from "react";
+import { toast } from "react-toastify";
+import { history } from "../..";
 import agent from "../api/agent";
 import { IActivity } from "../models/activity";
 
@@ -69,6 +71,7 @@ class ActivityStore {
         runInAction(() => {
           activity.date = new Date(activity.date);
           this.activity = activity;
+          this.activityRegistry.set(activity.id, activity);
         })
         return activity;
       } catch (error) {
@@ -97,8 +100,10 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.activity = activity;
       });
+      history.push(`/activities/${activity.id}`)
     } catch (error) {
-      console.log(error);
+      toast.error("Problem submitting data");
+      console.log(error.response);
     } finally {
       runInAction(() => {
         this.submitting = false;
@@ -115,8 +120,10 @@ class ActivityStore {
         this.activity = activity;
         this.submitting = false;
       });
+      history.push(`/activities/${activity.id}`)
     } catch (error) {
-      console.log(error);
+      toast.error("Problem submitting data");
+      console.log(error.response);
     } finally {
       runInAction(() => {
         this.submitting = false;
