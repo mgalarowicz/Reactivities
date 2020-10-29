@@ -11,10 +11,18 @@ import { toast } from "react-toastify";
 import { history } from "../..";
 import agent from "../api/agent";
 import { IActivity } from "../models/activity";
+import { RootStore } from "./rootStore";
 
 configure({ enforceActions: "always" });
 
-class ActivityStore {
+export default class ActivityStore {
+  rootStore: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    makeObservable(this);
+  }
+
   @observable activityRegistry = new Map();
   @observable activity: IActivity | null = null;
   @observable loadingInitial = false;
@@ -22,22 +30,24 @@ class ActivityStore {
   @observable target = "";
 
   @computed get activitiesByDate() {
-    return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()));
+    return this.groupActivitiesByDate(
+      Array.from(this.activityRegistry.values())
+    );
   }
 
   groupActivitiesByDate(activities: IActivity[]) {
     const sortedActivities = activities.sort(
       (a, b) => a.date.getTime() - b.date.getTime()
-    )
-    return Object.entries(sortedActivities.reduce((activities, activity) => {
-      const date = activity.date.toISOString().split('T')[0];
-      activities[date] = activities[date] ? [...activities[date], activity] : [activity];
-      return activities;
-    }, {} as {[key: string]: IActivity[]}));
-  }
-
-  constructor() {
-    makeObservable(this);
+    );
+    return Object.entries(
+      sortedActivities.reduce((activities, activity) => {
+        const date = activity.date.toISOString().split("T")[0];
+        activities[date] = activities[date]
+          ? [...activities[date], activity]
+          : [activity];
+        return activities;
+      }, {} as { [key: string]: IActivity[] })
+    );
   }
 
   @action loadActivities = async () => {
@@ -72,25 +82,25 @@ class ActivityStore {
           activity.date = new Date(activity.date);
           this.activity = activity;
           this.activityRegistry.set(activity.id, activity);
-        })
+        });
         return activity;
       } catch (error) {
         console.log(error);
       } finally {
         runInAction(() => {
           this.loadingInitial = false;
-        })
+        });
       }
     }
-  }
+  };
 
   @action clearActivity = () => {
     this.activity = null;
-  }
+  };
 
   getActivity = (id: string) => {
     return this.activityRegistry.get(id);
-  }
+  };
 
   @action createActivity = async (activity: IActivity) => {
     this.submitting = true;
@@ -100,7 +110,7 @@ class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
         this.activity = activity;
       });
-      history.push(`/activities/${activity.id}`)
+      history.push(`/activities/${activity.id}`);
     } catch (error) {
       toast.error("Problem submitting data");
       console.log(error.response);
@@ -120,7 +130,7 @@ class ActivityStore {
         this.activity = activity;
         this.submitting = false;
       });
-      history.push(`/activities/${activity.id}`)
+      history.push(`/activities/${activity.id}`);
     } catch (error) {
       toast.error("Problem submitting data");
       console.log(error.response);
@@ -152,5 +162,3 @@ class ActivityStore {
     }
   };
 }
-
-export default createContext(new ActivityStore());
