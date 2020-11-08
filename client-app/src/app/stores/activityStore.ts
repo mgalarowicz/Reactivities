@@ -9,6 +9,7 @@ import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
 import { history } from "../..";
 import agent from "../api/agent";
+import { setActivityProps } from "../common/util/util";
 import { IActivity } from "../models/activity";
 import { RootStore } from "./rootStore";
 
@@ -16,8 +17,8 @@ export default class ActivityStore {
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
-    this.rootStore = rootStore;
     makeObservable(this);
+    this.rootStore = rootStore;
   }
 
   @observable activityRegistry = new Map();
@@ -53,7 +54,7 @@ export default class ActivityStore {
       const activities = await agent.Activities.list();
       runInAction(() => {
         activities.forEach((activity) => {
-          activity.date = new Date(activity.date);
+          setActivityProps(activity, this.rootStore.userStore.user!);
           this.activityRegistry.set(activity.id, activity);
         });
       });
@@ -76,7 +77,7 @@ export default class ActivityStore {
       try {
         activity = await agent.Activities.details(id);
         runInAction(() => {
-          activity.date = new Date(activity.date);
+          setActivityProps(activity, this.rootStore.userStore.user!);
           this.activity = activity;
           this.activityRegistry.set(activity.id, activity);
         });

@@ -1,4 +1,4 @@
-import { configure } from "mobx";
+import { configure, makeObservable } from "mobx";
 import { createContext } from "react";
 import ActivityStore from "./activityStore";
 import CommonStore from "./commonStore";

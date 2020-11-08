@@ -4,6 +4,7 @@ import { RootStore } from "./rootStore";
 export default class CommonStore {
     rootStore: RootStore;
     constructor(rootStore: RootStore) {
+        makeObservable(this);
         this.rootStore = rootStore;
 
         reaction(
@@ -16,7 +17,6 @@ export default class CommonStore {
                 }
             }
         )
-        makeObservable(this);
     }
 
     @observable token: string | null = window.localStorage.getItem('jwt');
