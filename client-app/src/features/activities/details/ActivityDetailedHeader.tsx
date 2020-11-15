@@ -3,8 +3,8 @@ import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button, Header, Image, Item, Segment } from "semantic-ui-react";
-import { ActivityFormValues, IActivity } from "../../../app/models/activity";
-import { RootStore, RootStoreContext } from "../../../app/stores/rootStore";
+import { IActivity } from "../../../app/models/activity";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const activityImageStyle = {
   filter: "brightness(30%)",

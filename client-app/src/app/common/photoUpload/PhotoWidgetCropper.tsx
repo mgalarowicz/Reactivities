@@ -9,20 +9,13 @@ interface IProps {
 
 const PhotoWidgetCropper: React.FC<IProps> = ({ setImage, imagePreview }) => {
   const cropperRef = useRef<HTMLImageElement>(null);
-  const cropImage = () => {
+  const onCrop = () => {
     const imageElement: any = cropperRef?.current;
     const cropper: any = imageElement?.cropper;
-    if (
-      cropper.current &&
-      typeof cropper.current.getCroppedCanvas() === "undefined"
-    ) {
-      return;
-    }
-    cropper &&
-      cropper.current &&
-      cropper.current.getCroppedCanvas().toBlob((blob: any) => {
-        setImage(blob);
-      }, "image/jpeg");
+
+    cropper.getCroppedCanvas().toBlob((blob: any) => {
+      setImage(blob);
+    }, "image/jpeg");
   };
 
   return (
@@ -31,16 +24,15 @@ const PhotoWidgetCropper: React.FC<IProps> = ({ setImage, imagePreview }) => {
       src={imagePreview}
       style={{ height: 200, width: "100%" }}
       // Cropper.js options
-    //   initialAspectRatio={1 / 1}
-      aspectRatio={1 / 1}
-      preview='.img-preview'
+      initialAspectRatio={1 / 1}
+      preview=".img-preview"
       guides={false}
       viewMode={1}
       dragMode="move"
       scalable={true}
       cropBoxMovable={true}
       cropBoxResizable={true}
-      crop={cropImage}
+      crop={onCrop}
     />
   );
 };
