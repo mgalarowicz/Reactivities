@@ -40,22 +40,22 @@ namespace API
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-             services.AddDbContext<DataContext>(opt =>
-            {
-                opt.UseLazyLoadingProxies();
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDbContext<DataContext>(opt =>
+           {
+               opt.UseLazyLoadingProxies();
+               opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+           });
 
             ConfigureServices(services);
         }
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
-             services.AddDbContext<DataContext>(opt =>
-            {
-                opt.UseLazyLoadingProxies();
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDbContext<DataContext>(opt =>
+           {
+               opt.UseLazyLoadingProxies();
+               opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+           });
 
             ConfigureServices(services);
         }
