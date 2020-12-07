@@ -40,22 +40,22 @@ namespace API
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-             services.AddDbContext<DataContext>(opt =>
-            {
-                opt.UseLazyLoadingProxies();
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDbContext<DataContext>(opt =>
+           {
+               opt.UseLazyLoadingProxies();
+               opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+           });
 
             ConfigureServices(services);
         }
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
-             services.AddDbContext<DataContext>(opt =>
-            {
-                opt.UseLazyLoadingProxies();
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDbContext<DataContext>(opt =>
+           {
+               opt.UseLazyLoadingProxies();
+               opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+           });
 
             ConfigureServices(services);
         }
@@ -140,7 +140,9 @@ namespace API
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddScoped<IProfileReader, ProfileReader>();
+            services.AddScoped<IFacebookAccessor, FacebookAccessor>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+            services.Configure<FacebookAppSettings>(Configuration.GetSection("Authentication:Facebook"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
