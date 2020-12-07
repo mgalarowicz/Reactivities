@@ -1,4 +1,5 @@
 import { FORM_ERROR } from "final-form";
+import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import { Form as FinalForm, Field } from "react-final-form";
 import { combineValidators, isRequired } from "revalidate";
@@ -16,7 +17,7 @@ const validate = combineValidators({
 
 const LoginForm = () => {
   const rootStore = useContext(RootStoreContext);
-  const { login, fbLogin } = rootStore.userStore;
+  const { login, fbLogin, loading } = rootStore.userStore;
   return (
     <FinalForm
       onSubmit={(values: IUserFormValues) =>
@@ -61,11 +62,11 @@ const LoginForm = () => {
             fluid
           />
           <Divider horizontal>Or</Divider>
-          <SocialLogin fbCallback={fbLogin}/>
+          <SocialLogin loading={loading} fbCallback={fbLogin}/>
         </Form>
       )}
     />
   );
 };
 
-export default LoginForm;
+export default observer(LoginForm);
