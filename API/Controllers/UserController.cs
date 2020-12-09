@@ -21,11 +21,11 @@ namespace API.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<User>> Register(Register.Command command)
+        public async Task<ActionResult> Register(Register.Command command)
         {
-            var user = await Mediator.Send(command);
-            SetTokenCookie(user.RefreshToken);
-            return user;
+            command.Origin = Request.Headers["origin"];
+            await Mediator.Send(command);
+            return Ok("Registration successful - please check your email");
         }
 
         [HttpGet]
@@ -52,6 +52,17 @@ namespace API.Controllers
             var user = await Mediator.Send(command);
             SetTokenCookie(user.RefreshToken);
             return user;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("verifyEmail")]
+        public async Task<ActionResult> VerifyEmail(ConfirmEmail.Command command)
+        {
+            var result = await Mediator.Send(command);
+            if (!result.Succeeded)
+                return BadRequest("Problem verifying email address");
+            
+            return Ok("Email confirmed - you can now login");
         }
 
         private void SetTokenCookie(string refreshToken)
